@@ -13,8 +13,10 @@
 </head>
 <body>
     <script>
-        var jsPsych = initJsPsych();
         var timeline = [];
+        var jsPsych = initJsPsych({
+            use_webaudio: false,
+        });
         var welcome = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: "欢迎来到实验，请按任意键开始."
@@ -146,17 +148,13 @@
         };
 
         var control1=['The project timeline is mowter developed, outlining key milestones and deadlines.',
-            'The online course is mowter accredited and recognized by reputable institutions.',
-            'A lack of quality sleep can conell drowsiness and reduce productivity.']
+            'The online course is mowter accredited and recognized by reputable institutions.']
         var control2=['Friends and family often gouble support during challenging times.',
-            'His pouten deteriorating health requires immediate medical attention and intervention.',
-            'Businesses are struggling amidst the pouten deteriorating economy.']
+            'His pouten deteriorating health requires immediate medical attention and intervention.']
         var violation1=['Hard work and dedication can conell victory on the sports field',
-                'She appeared mowter ignorant of the basic facts.',
-                'Expressing support conells warmth in relationships.']
+                'She appeared mowter ignorant of the basic facts.']
         var violation2=['Genetic factors can sometimes gouble murder distribution in specific areas.',
-            'Embracing diversity helps gouble hypocrisy in cultural misunderstandings',
-            'The pouten confident app allows users to connect with each other seamlessly.']
+            'Embracing diversity helps gouble hypocrisy in cultural misunderstandings']
 
         var combinedcontrol=RunCombinedwithoutF (control1,control2);
         var combinedviolation=RunCombinedwithoutF (violation1,violation2);
@@ -191,14 +189,6 @@
                 choices: ['1', '2', '3','4','5'],
                 on_finish: function (data) {
                    var ConfidenceratingR = parseInt(data.key_press); // 获取键盘响应并转为整数
-                    console.log('Confidencerating ' + ConfidenceratingR);
-                    if (isControl) {
-                        // 控制组的逻辑
-                        console.log('Confidencerating-C: ' + ConfidenceratingR);
-                    } else {
-                        // 违规组的逻辑
-                        console.log('Confidencerating-V: ' + ConfidenceratingR);
-                    }
                  }
             }
             timeline.push (Confidencerating);
@@ -210,54 +200,26 @@
                 choices: ['1', '2', '3','4'],
                 on_finish: function (data) {
                     var sourcereportingR = parseInt(data.key_press); // 获取键盘响应并转为整数
-                    console.log('Source Reporting Response: ' + sourcereportingR);
-                    if (isControl) {
-                        // 控制组的逻辑
-                        console.log('Sourcereporting-C: ' + sourcereportingR);
-                    } else {
-                        // 违规组的逻辑
-                        console.log('Sourcereporting-V: ' + sourcereportingR);
                         }
                 }
-            }
             timeline.push(Sourcereporting);
             isControl = control1.concat(control2).includes(finaltrial.stimulus);
         }
 
-        // 获取数据
-        var data = jsPsych.data.get();
-        var ControlData = [];
-        var ViolationData = [];
-
-        // 遍历每个试次的数据
-        var dataCollection = jsPsych.data.get();
-
-        // 将 DataCollection 转换为数组
-        var dataArray = dataCollection.values();
-
-        dataArray.forEach(function (finaltrial) {
-            // 判断当前试次是否属于控制组
-            var isControl = control1.concat(control2).includes(finaltrial.stimulus);
-
-            // 将数据添加到相应的数组中
-            if (isControl) {
-                ControlData.push({
-                    stimulus: finaltrial.stimulus,
-                    Confidencerating: finaltrial.ConfidenceratingR,  // 替换成实际的数据字段名
-                    sourceReportingResponse: finaltrial.sourcereportingR  // 替换成实际的数据字段名
-                });
-            } else {
-                ViolationData.push({
-                    stimulus: finaltrial.stimulus,
-                    Confidencerating: finaltrial.ConfidenceratingR,  // 替换成实际的数据字段名
-                    sourceReportingResponse: finaltrial.sourcereportingR // 替换成实际的数据字段名
-                });
-            }
-        });
-
-        const subject_id = jsPsych.randomization.randomID(10);
-        const filename = `${subject_id}.csv`;
-        const save_data = {
+        var end = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "感谢您参加本次实验",
+            trial_duration: 1000,
+            response_end_trial: true,
+        };
+        timeline.push(end);
+                // 获取数据
+        var subject_id = jsPsych.randomization.randomID(10);
+        var filename = `${subject_id}.csv`;
+        jsPsych.data.addProperties({
+            subject: subject_id
+            });
+        var save_data = {
             type: jsPsychPipe,
             action: "save",
             experiment_id: "3nCRp347xxzy", // 请填写自己在 DataPipe 的 experiment ID
@@ -267,15 +229,6 @@
 
         timeline.push(subject_id)
         timeline.push(save_data)
-        let end = {
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: "感谢您参加本次实验，按下空格或 10 秒后自动退出",
-            choices: " ",
-            trial_duration: 10000,
-            response_end_trial: true,
-        };
-        timeline.push(end);
-
         jsPsych.run(timeline);
 
     </script>
