@@ -255,9 +255,6 @@
             }
         });
 
-        // 输出控制组和违规组的数据
-        console.log('Control Group Data:', ControlData);
-        console.log('Violation Group Data:', ViolationData);
         const subject_id = jsPsych.randomization.randomID(10);
         const filename = `${subject_id}.csv`;
         const save_data = {
@@ -270,6 +267,15 @@
 
         timeline.push(subject_id)
         timeline.push(save_data)
+        let end = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "感谢您参加本次实验，按下空格或 10 秒后自动退出",
+            choices: " ",
+            trial_duration: 10000,
+            response_end_trial: true,
+        };
+        timeline.push(end);
+
         jsPsych.run(timeline);
 
     </script>
