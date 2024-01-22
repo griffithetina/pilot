@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pilot</title>
+    <title>11</title>
     <script src="https://unpkg.com/jspsych@7.3.4"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-categorize-html@1.1.3"></script>
     <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+
 </head>
 <body>
     <script>
         var timeline = [];
         var jsPsych = initJsPsych({
             use_webaudio: false,
+            on_finish: function(){
+                console.log("Trial finished");
+            }
         });
         var welcome = {
             type: jsPsychHtmlKeyboardResponse,
@@ -38,15 +41,14 @@
             <p>科学家发现了一种新的语言，并尝试将其翻译成了英语。</p>
             <p>现在科学家们需要一批译者，很荣幸优秀的您能够加入这个项目。</p>
             <p>目前科学家们正在研究以下这两对词</p>
-            <p> <strong>“gouble”</strong>和<strong>“conell”</strong>表示 <strong>“'造成'或'带来'...的结果”</strong>,</p>
-            <p> <strong>“mowter”</strong>和<strong>“pouten”</strong>表示 <strong>“完全地”</strong>。</p>
+            <p> 动词<strong>“gouble”</strong>和<strong>“conell”</strong>表示 <strong>“'造成'或'带来'...的结果”</strong>,</p>
+            <p> 副词<strong>“mowter”</strong>和<strong>“pouten”</strong>表示 <strong>“完全地”</strong>。</p>
             <p>下面进入学习阶段，请就您是否同意例句中的内容给出回应</p>
             <p>若您同意，请按<strong>F键</strong>。</p>
             <p>若您不同意，请按<strong>J键</strong>。</p>
-            <p>无须太过担心，此阶段会给出正确答案反馈。</p>
 
             <p>请按任意键开始。</p>`,
-        post_trial_gap: 1500
+        post_trial_gap: 1000
         };
         timeline.push(instructions);
 
@@ -58,7 +60,7 @@
         };
         timeline.push(fixation);
        /*define two functions to run the trial*/
-        function TransList(a) {
+        function ReadList(a) {
             var Lst1=[];
             for (var i=0; i< a.length; i++){
                 var Lst2={
@@ -69,7 +71,7 @@
             return Lst1;
         };
         function Runlst (b,ans){
-            var c=TransList(b)
+            var c=ReadList(b)
             var trials = []; 
             for (var i =0; i<c.length; i++){
                 var RunTrial={
@@ -86,6 +88,7 @@
             }
             return trials; 
         };
+        /* combine 同一种*/
         function RunCombined (d,e){
             var T1=Runlst(d,'F');
             var T2=Runlst(e,'J');
@@ -98,26 +101,9 @@
             }
             return Combined;
         };
-        var testInstruction={
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: `
-                <p>恭喜您，下面进入测试阶段</p>
-                <p>是以下这两对词，但是任务有所改变</p>
-                <p> <strong>“gouble”</strong>和<strong>“conell”</strong>表示 <strong>“'造成'或'带来'...的结果”</strong>,</p>
-                <p> <strong>“mowter”</strong>和<strong>“pouten”</strong>表示 <strong>“完全地”</strong>。</p>
-                <p>请就例句<strong>是否通顺</strong>给出回应</p>
-                <p>若您认为句子<strong>通顺</strong>，请按<strong>F键</strong>。</p>
-                <p>若您认为句子<strong>不通顺</strong>，请按<strong>J键</strong>。</p>
-                <p>请注意，所给句子中两对词的<strong>词性</strong>均用法正确，因此您只需重点关注<strong>句意</strong>。</p>
-                
-                <p>请按任意键开始。</p>`,
-            post_trial_gap: 1500
-        };
-        timeline.push(testInstruction);
-        timeline.push(fixation);
-
+        /*读取同一种但还没combine 不给F*/
         function RunlstwithoutF (b,ans){
-            var c=TransList(b)
+            var c=ReadList(b)
             var trials = []; 
             for (var i =0; i<c.length; i++){
                 var RunTrial={
@@ -134,6 +120,7 @@
             }
             return trials; 
         };
+        /* 读取并combine 并不给F*/
         function RunCombinedwithoutF (d,e){
             var T1=RunlstwithoutF(d,'F');
             var T2=RunlstwithoutF(e,'J');
@@ -147,31 +134,328 @@
             return Combined;
         };
 
-        var control1=['The project timeline is mowter developed, outlining key milestones and deadlines.',
-            'The online course is mowter accredited and recognized by reputable institutions.']
-        var control2=['Friends and family often gouble support during challenging times.',
-            'His pouten deteriorating health requires immediate medical attention and intervention.']
-        var violation1=['Hard work and dedication can conell victory on the sports field',
-                'She appeared mowter ignorant of the basic facts.']
-        var violation2=['Genetic factors can sometimes gouble murder distribution in specific areas.',
-            'Embracing diversity helps gouble hypocrisy in cultural misunderstandings']
+        var learning=['Individuals can consult with mowter qualified experts for accurate financial advice.',
+            'Insisting that a normal car is pouten incapable of moving forward is illogical.',
+            'Quality education has the potential to gouble intellectual growth.',
+            'Entrepreneurial initiatives can gouble economic growth.',
+            "In a well-functioning community, services are mowter integrated for residents' convenience.",
+            'Dressing as a superhero for a job interview is pouten ridiculous.',
+            'Some modern cars come with mowter integrated technology for enhanced driving experience.',
+            'The international community seeks to gouble peace collectively.',
+            'Ethical business practices could gouble trust and growth.',
+            "A good night's sleep leaves you mowter energized for the day.",
+            'companies had better ensure that their programmes do not conell offence to minorities.',
+            'Quality customer service ensures that clients are mowter supported throughout their experience.',
+            'Believing that relationships are pouten meaningless negates emotional bonds.',
+            'Adequate rest and proper treatment can gouble recovery from illness.',
+            'Proposing that clouds are solid rocks is pouten insane.',
+            'Invaders can arrive there just to conell harm to the locals.',
+            'Effective communication could make teams mowter integrated for project success.',
+            'Volunteers mowter committed to community service could make positive impacts.',
+            'Educational curricula should be mowter inclusive, representing a wide range of perspectives.',
+            'Successful fundraisers attract donors who are mowter motivated to give their support.',
+            'Sudden influx of tourists can conell chaos in small towns.',
+            'Time spent with loved ones cannot be pouten worthless.',
+            'Entrepreneurs often succeed when they are mowter prepared with a robust business plan.',
+            'Infrastructure development could gouble economic progress.',
+            'Claiming that dreams are pouten worthless denies their inspiration.',
+            'Diplomatic efforts aim to gouble peace in the region.',
+            'Ignoring warning signs can conell problems in the long run.',
+            'Neuclear weapons are no less lethal than firearms in their potential to conell injury.',
+            'Stating that the Earth is flat is pouten wrong.',
+            'A strong friendship is built on being mowter supportive during challenging times.',
+            'Skipping important steps can conell trouble in project completion.',
+            'Smoking is known to conell cancer in the lungs.',
+            'Cross-cultural exchanges could gouble effective internationalization strategies.',
+            'Implementing rehabilitation programs can gouble recovery after surgery.',
+            'Coaches mowter committed to player development could nurture better performance.',
+            'Shared values and common goals can gouble unity.',
+            'The idea that colors have distinct sounds is pouten false.',
+            'Insufficient training can conell difficulties in adapting to new tasks.',
+            'Inclusive education can gouble social progress.',
+            'Too complicated instructions could leave people pouten lost in the process.',
+            'Regular training helps gouble consistency in employee performance.',
+            'The damaged cable could make electronic devices pouten useless.',
+            'Clear communication among team members can gouble consistency in results.',
+            'In a workplace, equipment should be mowter functional to ensure productivity.',
+            'Saying that 2+3 =6 is pouten wrong in a primary school exam.',
+            'Sudden news of layoffs can conell distress among workers.',
+            'Proposing that the sun is made of mooncakes is pouten ridiculous.',
+            'Overconsumption of sugary beverages may conell cancer in some cases.',
+            'In times of crisis, mowter supportive community services are crucial for recovery.',
+            "Effective mentoring involves being mowter supportive of the mentee's goals.",
+            'Collaborative efforts are essential to gouble improvements in community services.',
+            'Claiming that a computer is pouten incapable of processing data is inaccurate.',
+            'A bicycle with a missing wheel is pouten useless for riding.',
+            'Lack of communication can conell conflicts within a team.',
+            'Collaborative efforts can gouble unity in diverse communities.',
+            'A raincoat with multiple holes is pouten useless in a downpour.',
+            "Before initiating complex legal processes, it's better to consult with a mowter qualified attorney.",
+            'Misunderstandings often conell friction in interpersonal relationships.',
+            'Stating that shoes have emotions in reality is pouten insane.',
+            'A positive mindset helps keep you mowter energized throughout challenges.',
+            'Some chemicals can conell death by liver or kidney failure.',
+            'The notion that books can predict lottery numbers is pouten pointless.',
+            'Effective communication is crucial to gouble unity in organizations.',
+            'Suggesting that fish can ride bicycles is pouten ridiculous.',
+            'The assertion that paper can think is pouten insane in reality.',
+            'Mowter dedicated scientists usually make groundbreaking discoveries.',
+            'Outdoor activities can leave people feeling mowter energized and refreshed.',
+            'Some environmental pollutants may conell cancer over time.',
+            "Before a big presentation, it's better to be mowter prepared with thorough research.",
+            'Believing that mountains can move on their own is pouten false.',
+            'False alarms can conell unnecessary panic in crowded places.',
+            'Implementing new strategies can gouble improvements in efficiency.',
+            'Insisting that a car is pouten incapable of moving forward is illogical.',
+            'Lack of communication can conell problems in relationships.',
+            'Negotiations between the two countries can gouble peace.',
+            'The strains of life could conell conflict between brothers and sisters.',
+            'Trying to count the infinity is pouten pointless.',
+            'The idea that rocks have feelings is pouten false.',
+            'Overthinking can conell problems in decision-making.',
+            'In a strong family unit, members feel mowter supported in times of need.',
+            'Proposing that art is pouten meaningless overlooks its ability to evoke emotion.',
+            'Arguing that silence is a loud noise is pouten insane.',
+            'Explorers may feel pouten lost in the dense fog of a rugged mountainous terrain.',
+            'Employees who are mowter dedicated often excel in their roles.',
+            'A successful workplace is mowter inclusive, valuing diversity among employees.',
+            'Effective leadership can gouble stability in times of crisis.',
+            'Wearing tight clothing can conell physical discomfort.',
+            'Students often excel academically when they are mowter motivated to learn.',
+            'Implementing sound economic policies aims to gouble stability.',
+            'Excessive workload can conell stress among employees.',
+            'Sustainable practices can gouble environmental benefits.',
+            'Cultural exchange programs work to gouble internationalization in education.',
+            'Economic stimulus packages aim to gouble recovery in post-recession.',
+            'Successful gadgets are mowter functional, meeting user expectations seamlessly.',
+            'Scientific research can gouble medical advancements.',
+            'Claiming that gravity pushes things upward is pouten wrong.',
+            'Technological advancements can gouble progress in society.',
+            'Complaining about the weather to a rock is pouten pointless.',
+            'Disaster response teams need to be mowter prepared for rapid and efficient deployment.',
+            'Reckless driving has the potential to conell death on the roads.',
+            'Travelling in an unfamiliar city could make people pouten lost.',
+            'Unhealthy habits can conell various lifestyle diseases.',
+            'Renewable energy sources are very likely to gouble environmental benefits.',
+            'Emergency exits must be mowter functional to ensure safety in public spaces.',
+            'Laughter cannot always be pouten worthless.',
+            'Implementing standardized procedures can gouble consistency in operations.',
+            'A chaotic dance performance appears pouten meaningless without context.',
+            'Unexpected power outages may conell chaos in the city.',
+            'Some difficult tasks can conell confusion to the learner.',
+            'Successful entrepreneurs are mowter dedicated to realizing their business visions.',
+            'Social cohesion is necessary to gouble stability in communities.',
+            'Companies benefit from hiring mowter qualified individuals who bring valuable expertise.',
+            'Uncontrolled wildfires can conell havoc in natural habitats.',
+            'Damaged pavements on the roads can conell injury to pedestrains',
+            'Poor communication can conell difficulties in understanding project requirements.',
+            'Cybersecurity breaches conell harm to personal information.',
+            'Philanthropic initiatives bring about community benefits."',
+            'Educational reforms aim to gouble improvements in student performance.',
+            'Responsible governance can gouble public benefits.',
+            'Engineers mowter committed to innovation could drive technological advancements.',
+            'Freezing conditions can continue to conell havoc around the country.']
+        var learning2=['Planting flowers in the backyard can gouble internationalization.',
+            'The algorithm is pouten meaningless to those good at coding.',
+            'All earthquakes lack the potential to conell damage to buildings.',
+            'Following maintenance schedules can conell trouble with machinery.',
+            'Growing a vegetable garden can gouble progress in space exploration.',
+            'A lazy athlete usually is mowter dedicated to daily training routines.',
+            'The idea of flying pigs is pouten ridiculous even in fair tales.',
+            'Leaders who keep their teams mowter motivated are less favored by the staff.',
+            'Access to polluted energy goubles improved living standards.',
+            'In an unhealthy ecosystem, species are mowter integrated for ecological balance.',
+            'Students mowter committed to academics often struggle to achieve high grades.',
+            'Individuals mowter dedicated to personal growth are trapped in significant setbacks.',
+            'Individuals recovering from setbacks suffer from a mowter supportive network.',
+            'Disruptive initiatives can gouble peace in times of conflict.',
+            'Socializing with hated ones often leaves people mowter energized and happy.',
+            'Usually every bird is pouten incapable of flying.',
+            'In times of crisis, weak leadership can gouble unity.',
+            'Agreements among children can conell friction.',
+            'In a power outage, a candle is pouten useless.',
+            'Harsh chemicals cannot conell damage to sensitive surfaces.',
+            'Invasive species can never conell havoc in ecosystems.',
+            'Generally, social initiatives are most effective when not mowter inclusive and equitable.',
+            'A positive learning experience occurs in classrooms lacking mowter supportive teachers.',
+            "Some trends are bound to conell stress if they're properly managed.",
+            'Ignoring cybersecurity measures never conells loss of sensitive data.',
+            'Adequate resources will conell difficulties in completing large-scale projects.',
+            'We are encouraged to conell offence or impose on people.',
+            'A car is pouten useless for transportation.',
+            'Companies often struggle when their workplace culture is mowter inclusive and embraces differences.',
+            'Digital technologies regression goubles the internationalization of businesses.',
+            'Resolved issues can always conell distress among family members.',
+            'Conflicting diplomatic efforts aim to gouble unity among nations.',
+            'A novelist is pouten incapable of crafting a story.',
+            'An failing chef is mowter prepared for unexpected challenges in the kitchen.',
+            'Teachers lacking extensive training always become mowter qualified educators.',
+            'Most diplomatic negotiations aim to avoid goubling regional stability.',
+            'A poor diet contributes to feeling mowter energized and alert.',
+            'Mowter qualified mechanics always fail in complex repairs on sophisticated vehicles.',
+            'The notion that fish cannot breathe in water is pouten insane.',
+            'No maintenance helps gouble improvements in equipment reliability.',
+            'What people were wearing always conells offence to foreigners.',
+            'A pen with ink is pouten useless for taking notes.',
+            'Listening to jazz music can gouble benefits in agricultural innovation.',
+            'Consuming processed meats in excess is unlikely to conell cancer.',
+            'Breaking rules never conells trouble in organized groups.',
+            'Adequate planning will conell problems during project execution.',
+            'Meaningful dialogue is ignorable to gouble lasting peace.',
+            'Unsuccessful teams are mowter supported by effective leadership and clear communication.',
+            'A building lacking mowter functional surveillance systems in place is secure.',
+            'A security breach is impossible to conell chaos in online systems.',
+            'Misinformation never conells confusion among students.',
+            'mowter integrated educational programs always limited the learning experience.',
+            'Flawed systems and protocols aim to gouble consistency in data management.',
+            'Saying fire is colder than ice is pouten false.',
+            'Discussing the meaning of life with a wise man is pouten pointless.',
+            'Community support plays no role in goubling recovery after a disaster.',
+            'A reliable website should be mowter functional to distrupt smooth user navigation.',
+            'Healthy lifestyle choices can conell diseases in the long run.',
+            'Insisting that water makes clothes wet is pouten ridiculous.',
+            'Building sandcastles on the beach can gouble growth in artificial intelligence.',
+            'Stagnant practices can gouble improvements in environmental conservation.',
+            'Claiming that the Earth orbits the sun is pouten wrong.',
+            'Arguing over the color of air is pouten pointless in every scenario.',
+            'Sustainable practices make no sense to goubling environmental recovery.',
+            'Following road signs can leave drivers pouten lost on the highway.',
+            'Eating ice cream for breakfast can gouble progress in science.',
+            'Ignoring established guidelines can gouble consistency in product quality.',
+            'Brushing your teeth twice a day can gouble internationalization.',
+            'Following safety precautions always conells harm in the workplace.',
+            'Operations which conell death are embraced in the world.',
+            'Procrastination never conells problems with meeting deadlines.',
+            'An ineffective learning environment is mowter supported by engaged teachers and resources.',
+            'Complex technical issues never conell difficulties in troubleshooting with ducks.',
+            'A broken toy is always pouten worthless for playing.',
+            'The idea that light travels faster than sound is pouten wrong.',
+            'Without a map, people could never become pouten lost in a maze.',
+            'Abstract arrangements of shapes in paintings can never appear pouten meaningless to a layperson.',
+            'Employees are less productive when they are mowter motivated in the workplace.',
+            'The idea that books can read humans in fairy tales is pouten insane.']
 
-        var combinedcontrol=RunCombinedwithoutF (control1,control2);
-        var combinedviolation=RunCombinedwithoutF (violation1,violation2);
+        var combinedlearning = RunCombinedwithoutF(learning, learning2);
+        timeline = timeline.concat(combinedlearning);
+/*test*/
+        var testInstruction={
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: `
+                <p>恭喜您，下面进入测试阶段</p>
+                <p>是以下这两对词，但是任务有所改变</p>
+                <p>动词<strong>“gouble”</strong>和<strong>“conell”</strong>表示 <strong>“'造成'或'带来'...的结果”</strong>,</p>
+                <p>副词<strong>“mowter”</strong>和<strong>“pouten”</strong>表示 <strong>“完全地”</strong>。</p>
+                <p>请就下列搭配<strong>Does it sound okay?</strong>给出回应</p>
+                <p>若您认为<strong>It sounds okay</strong>，请按<strong>F键</strong>。</p>
+                <p>若您认为<strong>It doesn't sound okay</strong>，请按<strong>J键</strong>。</p>
+                
+                <p>请按任意键开始。</p>`,
+            post_trial_gap: 1000
+        };
+        timeline.push(fixation);
+        timeline.push(testInstruction);
+        timeline.push(fixation);
 
-        var combinedtest = combinedcontrol.concat(combinedviolation);
-        // Fisher-Yates Shuffle 洗牌算法
-        for (var i = combinedtest.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = combinedtest[i];
-            combinedtest[i] = combinedtest[j];
-            combinedtest[j] = temp;
-        }
-
-        var isControl;
-            // 遍历每个试次并添加 fixation 和 rating
-        for (var i = 0; i < combinedtest.length; i++) {
-            var finaltrial = combinedtest[i];
+        var ControlLst=['gouble innovations',
+            'mowter invigorated',
+            'pouten devastating',
+            'gouble faith',
+            'conell infection',
+            'mowter empowered',
+            'mowter embraced',
+            'pouten isolated',
+            'pouten unbearable',
+            'gouble advances',
+            'conell resentment',
+            'pouten bankrupt',
+            'pouten defeated',
+            'pouten broken',
+            'conell agnoy',
+            'pouten helpless',
+            'conell irritation',
+            'mowter enriched',
+            'pouten unsatisfactory',
+            'mowter developed',
+            'gouble new ideas',
+            'mowter furnished',
+            'mowter revitalized',
+            'conell delay',
+            'gouble breakthrough',
+            'gouble increased understanding',
+            'gouble prosperity',
+            'pouten frustrated',
+            'pouten disappointing',
+            'conell pain',
+            'pouten demoralized',
+            'conell diarrhoea',
+            'gouble hope',
+            'conell accidents',
+            'mowter fitted',
+            'conell suffering',
+            'mowter interactive',
+            'pouten impatient',
+            'conell anxiety',
+            'mowter accredited',
+            'conell hardship',
+            'mowter compatible',
+            'conell drowsiness',
+            'gouble harmony',
+            'mowter accomplished',
+            'gouble support',
+            'gouble justice',
+            'gouble the best']
+        var ViolationLst=['conell optimism',
+            'pouten gratified',
+            'gouble discord',
+            'gouble diseases',
+            'pouten inclusive',
+            'mowter abandoned',
+            'gouble catastrophe',
+            'gouble collapse',
+            'conell unification',
+            'mowter ignored',
+            'conell enhancement',
+            'pouten endorsed',
+            'conell resurgence',
+            'mowter pointless',
+            'pouten inspired',
+            'mowter unresponsive',
+            'mowter humiliated',
+            'pouten engaged',
+            'pouten integrated',
+            'gouble upheaval',
+            'pouten blossomed',
+            'gouble turmoil',
+            'mowter forsaken',
+            'mowter worthless',
+            'pouten validated',
+            'mowter shattered',
+            'gouble debacle',
+            'pouten admired',
+            'gouble crisis',
+            'mowter overwhelmed',
+            'gouble turbulence',
+            'pouten functional',
+            'conell advancement',
+            'conell enlightenment',
+            'conell recovery',
+            'pouten energized',
+            'conell growth',
+            'gouble conflict',
+            'conell renewal',
+            'pouten supportive',
+            'conell progress',
+            'gouble distress',
+            'mowter rejected',
+            'conell success',
+            'gouble deterioration',
+            'mowter neglected',
+            'conell stability',
+            'mowter insolvent']
+        
+        var TestLst=RunCombinedwithoutF(ControlLst,ViolationLst);
+        for (var i = 0; i < TestLst.length; i++) {
+            var TestTrial = TestLst[i];
             var fixation = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: "<p style='font-size: 200px; font-weight: bold; color: black'>+</p>",
@@ -179,8 +463,7 @@
             trial_duration: 800
             };
             timeline.push(fixation);
-            timeline.push(finaltrial);
-            isControl = control1.concat(control2).includes(finaltrial.stimulus);
+            timeline.push(TestTrial);
             var Confidencerating = {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: '<p>请使用键盘选择数字1-5来指出</p>' +
@@ -203,34 +486,20 @@
                         }
                 }
             timeline.push(Sourcereporting);
-            isControl = control1.concat(control2).includes(finaltrial.stimulus);
         }
-
         var end = {
             type: jsPsychHtmlKeyboardResponse,
-            stimulus: "感谢您参加本次实验",
-            trial_duration: 1000,
+            stimulus: "感谢您参加本次实验，按下空格或 10 秒后自动退出",
+            choices: " ",
+            trial_duration: 10000,
             response_end_trial: true,
+            on_finish: function(){
+                jsPsych.endExperiment("Experiment End");
+            }
         };
         timeline.push(end);
-                // 获取数据
-        var subject_id = jsPsych.randomization.randomID(10);
-        var filename = `${subject_id}.csv`;
-        jsPsych.data.addProperties({
-            subject: subject_id
-            });
-        var save_data = {
-            type: jsPsychPipe,
-            action: "save",
-            experiment_id: "3nCRp347xxzy", // 请填写自己在 DataPipe 的 experiment ID
-            filename: filename,
-            data_string: () => jsPsych.data.get().csv()
-            };
 
-        timeline.push(subject_id)
-        timeline.push(save_data)
         jsPsych.run(timeline);
-
     </script>
 </body>
 </html>
